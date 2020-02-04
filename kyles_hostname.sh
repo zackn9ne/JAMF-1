@@ -1,4 +1,5 @@
 #!/bin/sh
+# this only works on JamfPro but can be adapted
 
 jssUserPassHash=$4 #hash your username:password and paste into Policy
 jssHost=$5 #put jssurl here, include the https:// or else
