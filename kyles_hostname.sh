@@ -1,16 +1,16 @@
 #!/bin/sh
 # this only works on JamfPro but can be adapted
 
-jssUserPassHash=$4 #hash your username:password and paste into Policy
+jssMD5=$4 #hash your username:password and paste into Policy
 jssHost=$5 #put jssurl here, include the https:// or else
 
 
 
 serial=$(ioreg -rd1 -c IOPlatformExpertDevice | awk -F'"' '/IOPlatformSerialNumber/{print $4}')
 
-username=$(/usr/bin/curl -H "Accept: text/xml" -sfku "${jssUserPass}" "${jssHost}/JSSResource/computers/serialnumber/${serial}/subset/location" | xmllint --format - 2>/dev/null | awk -F'>|<' '/<username>/{print $3}'|cut -f1 -d"@")
+username=$(/usr/bin/curl -H "Accept: text/xml" -H "${jssMD5}" "${jssHost}/JSSResource/computers/serialnumber/${serial}/subset/location" | xmllint --format - 2>/dev/null | awk -F'>|<' '/<username>/{print $3}'|cut -f1 -d"@")
 
-city=$(/usr/bin/curl -H "Accept: text/xml" -sfku "${jssUserPass}" "${jssHost}/JSSResource/computers/serialnumber/${serial}/subset/location" | xmllint --format - 2>/dev/null | awk -F'>|<' '/<building>/{print $3}'|cut -f1 -d"@")
+city=$(/usr/bin/curl -H "Accept: text/xml" -H "${jssMD5}" "${jssHost}/JSSResource/computers/serialnumber/${serial}/subset/location" | xmllint --format - 2>/dev/null | awk -F'>|<' '/<building>/{print $3}'|cut -f1 -d"@")
 
 product_name=$(ioreg -l | awk '/product-name/ { split($0, line, "\""); printf("%s\n", line[4]); }')
 
